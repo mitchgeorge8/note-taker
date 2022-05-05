@@ -1,5 +1,5 @@
 const fs = require("fs");
-const { createNewNote, validateNote } = require("../lib/notes");
+const { createNewNote, validateNote, deleteNote } = require("../lib/notes");
 const notes = require("../db/notes");
 
 jest.mock("fs");
@@ -11,7 +11,7 @@ test("Creates a new note object", () => {
   expect(note.text).toBe("test text");
 });
 
-test("Validates note", () => {
+test("Validates a new note", () => {
   const validNote = { title: "Test Title", text: "test text" };
   const invalidNote = { title: "", text: "" };
 
@@ -20,4 +20,15 @@ test("Validates note", () => {
 
   expect(result1).toBe(true);
   expect(result2).toBe(false);
+});
+
+test("Deletes a note", () => {
+  const note = createNewNote(
+    { title: "Test Title", text: "test text", id: "9999" },
+    notes
+  );
+
+  deleteNote(note.id, notes);
+
+  expect(notes).not.toContain(note);
 });
